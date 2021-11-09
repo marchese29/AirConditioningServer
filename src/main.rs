@@ -4,8 +4,12 @@ extern crate rocket;
 extern crate diesel;
 
 use crate::database::ConditionDbConn;
+use crate::mounts::events::*;
+use crate::mounts::registry::*;
 
 mod database;
+mod model;
+mod mounts;
 
 #[get("/")]
 async fn index() -> &'static str {
@@ -17,6 +21,17 @@ async fn main() {
     let _ = rocket::build()
         .attach(ConditionDbConn::fairing())
         .mount("/", routes![index])
+        .mount("/events", routes![set_condition, unset_condition])
+        .mount(
+            "/registry",
+            routes![
+                create_action,
+                create_condition,
+                list_actions,
+                list_conditions,
+                describe_action
+            ],
+        )
         .launch()
         .await;
 }

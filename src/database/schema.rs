@@ -21,6 +21,7 @@ table! {
         id -> Integer,
         action_name -> Nullable<Text>,
         action_description -> Nullable<Text>,
+        needs_all -> Bool,
     }
 }
 

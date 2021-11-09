@@ -18,7 +18,8 @@ CREATE TABLE webhooks (
 CREATE TABLE triggers (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     action_name VARCHAR,
-    action_description VARCHAR
+    action_description VARCHAR,
+    needs_all BOOLEAN NOT NULL
 );
 
 CREATE TABLE trigger_conditions (

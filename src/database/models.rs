@@ -7,6 +7,7 @@ pub struct Trigger {
     pub id: u32,
     pub action_name: Option<String>,
     pub action_description: Option<String>,
+    pub needs_all: bool,
 }
 
 #[derive(Identifiable, Queryable, Associations, PartialEq, Debug)]
