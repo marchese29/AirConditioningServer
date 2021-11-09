@@ -1,0 +1,2 @@
+[global.databases]
+sqlite_conditions = { url = "./db/ac-database.sqlite" }
