@@ -8,6 +8,7 @@ use crate::mounts::events::*;
 use crate::mounts::registry::*;
 
 mod database;
+mod errors;
 mod model;
 mod mounts;
 

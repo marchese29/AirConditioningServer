@@ -1,5 +1,6 @@
 use rocket::{http::Status, serde::json::Json};
 
+use crate::database::access::{get_actions, get_conditions};
 use crate::database::ConditionDbConn;
 use crate::model::request::CreateConditionRequest;
 use crate::model::response::{ActionDescription, ConditionDescription};
@@ -23,14 +24,24 @@ pub async fn create_condition(
 
 #[get("/actions")]
 pub async fn list_actions(conn: ConditionDbConn) -> Result<Json<Vec<ShallowAction>>, Status> {
-    todo!()
+    let response = conn.run(move |c| { get_actions(c) }).await;
+    if let Ok(triggers) = response {
+        Ok(Json(triggers.iter().map(ShallowAction::from_trigger).collect()))
+    } else {
+        Err(Status::FailedDependency)
+    }
 }
 
 #[get("/conditions")]
 pub async fn list_conditions(
     conn: ConditionDbConn,
 ) -> Result<Json<Vec<ConditionDescription>>, Status> {
-    todo!()
+    let response = conn.run(move |c| { get_conditions(c) }).await;
+    if let Ok(conditions) = response {
+        Ok(Json(conditions.iter().map(ConditionDescription::from_condition).collect()))
+    } else {
+        Err(Status::FailedDependency)
+    }
 }
 
 #[get("/action/<id>")]
