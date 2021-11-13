@@ -96,6 +96,25 @@ pub fn assemble_trigger(
         create_webhook(conn, &new_webhook)?;
     }
 
+    let mut statuses = Vec::new();
+    for component in components.iter() {
+        match component {
+            Component::Condition(condition) => {
+                statuses.push(condition.is_on);
+            }
+            Component::Trigger(trigger) => {
+                statuses.push(trigger.is_on);
+            }
+        }
+    }
+
+    let is_on: bool;
+    if trigger.needs_all {
+        is_on = statuses.iter().all(|&s| s);
+    } else {
+        is_on = statuses.iter().any(|&s| s);
+    }
+
     Ok(TriggerDescription {
         id: trigger.id,
         name: trigger.name.clone(),
@@ -103,6 +122,6 @@ pub fn assemble_trigger(
         webhooks: request.webhooks.clone(),
         components,
         join_type: request.join_type,
-        is_on: false, // TODO
+        is_on,
     })
 }
