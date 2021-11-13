@@ -33,7 +33,7 @@ pub fn assemble_trigger(
                 };
                 let condition = create_condition(conn, new_condition)?;
 
-                let trigger_condition = TriggerCondition {
+                let trigger_condition = NewTriggerCondition {
                     triggered_id: trigger.id,
                     condition_id: condition.id,
                 };
@@ -45,7 +45,7 @@ pub fn assemble_trigger(
             TriggerComponent::NewTrigger(trigger_request) => {
                 let new_trigger = assemble_trigger(trigger_request, conn)?;
 
-                let trigger_trigger = TriggerTrigger {
+                let trigger_trigger = NewTriggerTrigger {
                     triggered_id: trigger.id,
                     triggering_id: new_trigger.id,
                 };
@@ -54,7 +54,7 @@ pub fn assemble_trigger(
             }
             TriggerComponent::ExistingCondition(condition_id) => {
                 if let Some(condition) = get_condition_for_id(conn, *condition_id)? {
-                    let trigger_condition = TriggerCondition {
+                    let trigger_condition = NewTriggerCondition {
                         triggered_id: trigger.id,
                         condition_id: condition.id,
                     };
@@ -71,7 +71,7 @@ pub fn assemble_trigger(
             }
             TriggerComponent::ExistingTrigger(trigger_id) => {
                 if let Some(new_trigger) = traverse_trigger(*trigger_id, conn)? {
-                    let trigger_trigger = TriggerTrigger {
+                    let trigger_trigger = NewTriggerTrigger {
                         triggered_id: trigger.id,
                         triggering_id: new_trigger.id,
                     };
@@ -88,7 +88,7 @@ pub fn assemble_trigger(
     }
 
     if let Some(webhook) = &request.webhooks {
-        let new_webhook = Webhook {
+        let new_webhook = NewWebhook {
             engage_url: webhook.engaged_webhook.clone(),
             disengage_url: webhook.disengaged_webhook.clone(),
             trigger_id: trigger.id,
