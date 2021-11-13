@@ -10,22 +10,18 @@ pub struct CreateConditionRequest {
 }
 
 #[derive(Deserialize)]
-pub struct CreateActionRequest {
+pub struct CreateTriggerRequest {
     pub name: String,
     pub description: String,
-    pub webhooks: WebhookDescription,
-    pub join: JoinRequest,
-}
-
-#[derive(Deserialize)]
-pub struct JoinRequest {
-    pub components: Vec<ActionComponent>,
+    pub webhooks: Option<WebhookDescription>,
+    pub components: Vec<TriggerComponent>,
     pub join_type: JoinType,
 }
 
 #[derive(Deserialize)]
-pub enum ActionComponent {
-    Join(JoinRequest),
-    ExistingCondition(u32),
+pub enum TriggerComponent {
+    NewTrigger(CreateTriggerRequest),
+    ExistingTrigger(i32),
     NewCondition(CreateConditionRequest),
+    ExistingCondition(i32),
 }

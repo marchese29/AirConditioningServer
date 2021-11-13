@@ -9,6 +9,7 @@ use crate::mounts::registry::*;
 
 mod database;
 mod errors;
+mod logic;
 mod model;
 mod mounts;
 
@@ -27,8 +28,8 @@ async fn main() {
             "/registry",
             routes![
                 create_action,
-                create_condition,
-                list_actions,
+                create_new_condition,
+                list_triggers,
                 list_conditions,
                 describe_action
             ],
