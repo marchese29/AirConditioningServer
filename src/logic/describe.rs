@@ -3,7 +3,7 @@ use rocket_sync_db_pools::diesel::SqliteConnection;
 use crate::{
     database::{
         access::{
-            get_conditions_for_trigger, get_trigger_for_id, get_triggers_for_trigger,
+            get_conditions_for_trigger, get_trigger_for_id, get_triggering_triggers,
             get_webhook_for_trigger,
         },
         models::Trigger,
@@ -26,7 +26,7 @@ pub fn traverse_trigger(
     }
 }
 
-fn traverse_trigger_object(
+pub fn traverse_trigger_object(
     trigger: &Trigger,
     conn: &SqliteConnection,
 ) -> ACResult<TriggerDescription> {
@@ -40,7 +40,7 @@ fn traverse_trigger_object(
         };
         components.push(Component::Condition(description));
     }
-    for triggerer in get_triggers_for_trigger(conn, &trigger)? {
+    for triggerer in get_triggering_triggers(conn, &trigger)? {
         let description = traverse_trigger_object(&triggerer, conn)?;
         components.push(Component::Trigger(description));
     }
