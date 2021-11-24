@@ -4,7 +4,7 @@ use crate::{
     database::{
         access::{
             get_conditions_for_trigger, get_triggered_triggers, get_triggering_triggers,
-            get_triggers_for_condition, get_webhook_for_trigger, set_condition_off,
+            get_triggers_for_condition, set_condition_off,
             set_condition_on,
         },
         models::{Condition, Trigger},
@@ -189,23 +189,15 @@ fn describe_current_state(
 }
 
 fn engage_trigger(trigger: &Trigger, conn: &SqliteConnection) -> ACResult<()> {
-    if let Some(_webhook) = get_webhook_for_trigger(conn, trigger)? {
-        todo!("Call the webhook")
-    }
-
     for triggered in get_triggered_triggers(conn, trigger)?.iter() {
         set_trigger_for_trigger(trigger, triggered, conn)?;
     }
-    Ok(())
+    todo!("Carry out actions")
 }
 
 fn disengage_trigger(trigger: &Trigger, conn: &SqliteConnection) -> ACResult<()> {
-    if let Some(_webhook) = get_webhook_for_trigger(conn, trigger)? {
-        todo!("Call the webhook")
-    }
-
     for triggered in get_triggered_triggers(conn, trigger)?.iter() {
         unset_trigger_for_trigger(trigger, triggered, conn)?;
     }
-    Ok(())
+    todo!("Carry out actions")
 }

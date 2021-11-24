@@ -3,15 +3,14 @@ use rocket_sync_db_pools::diesel::SqliteConnection;
 use crate::{
     database::{
         access::{
-            get_conditions_for_trigger, get_trigger_for_id, get_triggering_triggers,
-            get_webhook_for_trigger,
+            get_conditions_for_trigger, get_trigger_for_id, get_triggering_triggers
         },
         models::Trigger,
     },
     errors::ACResult,
     model::{
         response::{Component, ConditionDescription, TriggerDescription},
-        JoinType, WebhookDescription,
+        JoinType,
     },
 };
 
@@ -64,9 +63,6 @@ pub fn traverse_trigger_object(
         id: trigger.id,
         name: trigger.name.clone(),
         description: trigger.description.clone(),
-        webhooks: get_webhook_for_trigger(conn, &trigger)?
-            .as_ref()
-            .map(WebhookDescription::from_webhook),
         components,
         join_type: if trigger.needs_all {
             JoinType::All

@@ -34,6 +34,7 @@ async fn main() {
                 describe_trigger
             ],
         )
+        .mount("/registry", routes![])
         .launch()
         .await;
 }

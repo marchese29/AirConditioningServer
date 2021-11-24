@@ -75,15 +75,6 @@ pub fn assemble_trigger(
         }
     }
 
-    if let Some(webhook) = &request.webhooks {
-        let new_webhook = NewWebhook {
-            engage_url: webhook.engaged_webhook.clone(),
-            disengage_url: webhook.disengaged_webhook.clone(),
-            trigger_id: trigger.id,
-        };
-        create_webhook(conn, &new_webhook)?;
-    }
-
     let mut statuses = Vec::new();
     for component in components.iter() {
         match component {
@@ -107,7 +98,6 @@ pub fn assemble_trigger(
         id: trigger.id,
         name: trigger.name.clone(),
         description: trigger.description.clone(),
-        webhooks: request.webhooks.clone(),
         components,
         join_type: request.join_type,
         is_on,

@@ -1,6 +1,6 @@
 use rocket::serde::Deserialize;
 
-use super::{JoinType, WebhookDescription};
+use super::JoinType;
 
 #[derive(Deserialize)]
 pub struct CreateConditionRequest {
@@ -13,7 +13,6 @@ pub struct CreateConditionRequest {
 pub struct CreateTriggerRequest {
     pub name: String,
     pub description: String,
-    pub webhooks: Option<WebhookDescription>,
     pub components: Vec<TriggerComponent>,
     pub join_type: JoinType,
 }

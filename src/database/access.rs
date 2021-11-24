@@ -93,15 +93,6 @@ pub fn get_triggers_for_condition(
     Ok(triggers.filter(id.eq_any(ctrigs)).load::<Trigger>(conn)?)
 }
 
-pub fn get_webhook_for_trigger(
-    conn: &SqliteConnection,
-    trigger: &Trigger,
-) -> ACResult<Option<Webhook>> {
-    Ok(Webhook::belonging_to(trigger)
-        .first::<Webhook>(conn)
-        .optional()?)
-}
-
 pub fn create_condition(
     conn: &SqliteConnection,
     new_condition: NewCondition,
@@ -133,12 +124,6 @@ pub fn create_trigger(conn: &SqliteConnection, new_trigger: NewTrigger) -> ACRes
 
     let last_id: i32 = select(last_insert_id).first(conn)?;
     Ok(triggers.find(last_id).first::<Trigger>(conn)?)
-}
-
-pub fn create_webhook(conn: &SqliteConnection, new_webhook: &NewWebhook) -> ACResult<()> {
-    use super::schema::webhooks::dsl::*;
-    insert_into(webhooks).values(new_webhook).execute(conn)?;
-    Ok(())
 }
 
 pub fn create_trigger_condition(

@@ -2,7 +2,7 @@ use rocket::serde::Serialize;
 
 use crate::database::models::{Condition, Trigger};
 
-use super::{JoinType, WebhookDescription};
+use super::JoinType;
 
 #[derive(Serialize)]
 pub struct ConditionDescription {
@@ -51,8 +51,12 @@ pub struct TriggerDescription {
     pub id: i32,
     pub name: String,
     pub description: String,
-    pub webhooks: Option<WebhookDescription>,
     pub components: Vec<Component>,
     pub join_type: JoinType,
     pub is_on: bool,
+}
+
+#[derive(Serialize)]
+pub struct ActionInterfaceDescription {
+
 }

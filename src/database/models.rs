@@ -67,21 +67,3 @@ pub struct NewTriggerTrigger {
     pub triggered_id: i32,
     pub triggering_id: i32,
 }
-
-#[derive(Identifiable, Queryable, Associations, PartialEq, Debug)]
-#[belongs_to(Trigger)]
-#[table_name = "webhooks"]
-pub struct Webhook {
-    pub id: i32,
-    pub engage_url: String,
-    pub disengage_url: Option<String>,
-    pub trigger_id: i32,
-}
-
-#[derive(Insertable, PartialEq, Debug)]
-#[table_name = "webhooks"]
-pub struct NewWebhook {
-    pub engage_url: String,
-    pub disengage_url: Option<String>,
-    pub trigger_id: i32,
-}

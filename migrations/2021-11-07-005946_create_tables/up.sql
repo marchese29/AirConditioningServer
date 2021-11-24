@@ -5,14 +5,6 @@ CREATE TABLE conditions (
     is_on BOOLEAN NOT NULL
 );
 
-CREATE TABLE webhooks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    engage_url VARCHAR NOT NULL,
-    disengage_url VARCHAR,
-    trigger_id INTEGER NOT NULL,
-    FOREIGN KEY(trigger_id) REFERENCES triggers(id)
-);
-
 CREATE TABLE triggers (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name VARCHAR NOT NULL,
@@ -20,10 +12,18 @@ CREATE TABLE triggers (
     needs_all BOOLEAN NOT NULL
 );
 
-CREATE TABLE actions (
+CREATE TABLE action_interfaces (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     name VARCHAR NOT NULL,
     description VARCHAR NOT NULL
+);
+
+CREATE TABLE actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    action_interface_id INTEGER NOT NULL,
+    FOREIGN KEY(action_interface_id) REFERENCES action_interfaces(id)
 );
 
 CREATE TABLE trigger_conditions (
