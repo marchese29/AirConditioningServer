@@ -1,6 +1,6 @@
 use crate::{
     database::{access::*, models::*},
-    errors::{ACResult, DataEntryMissingError},
+    errors::ACResult,
     logic::describe::traverse_trigger,
     model::{
         request::{CreateTriggerRequest, TriggerComponent},
@@ -53,36 +53,24 @@ pub fn assemble_trigger(
                 components.push(Component::Trigger(new_trigger));
             }
             TriggerComponent::ExistingCondition(condition_id) => {
-                if let Some(condition) = get_condition_for_id(conn, *condition_id)? {
-                    let trigger_condition = NewTriggerCondition {
-                        triggered_id: trigger.id,
-                        condition_id: condition.id,
-                    };
-                    create_trigger_condition(conn, &trigger_condition)?;
-                    components.push(Component::Condition(ConditionDescription::from_condition(
-                        &condition,
-                    )));
-                } else {
-                    return Err(Box::new(DataEntryMissingError::with_message(format!(
-                        "Condition with id {}",
-                        *condition_id
-                    ))));
-                }
+                let condition = get_condition_for_id(conn, *condition_id)?;
+                let trigger_condition = NewTriggerCondition {
+                    triggered_id: trigger.id,
+                    condition_id: condition.id,
+                };
+                create_trigger_condition(conn, &trigger_condition)?;
+                components.push(Component::Condition(ConditionDescription::from_condition(
+                    &condition,
+                )));
             }
             TriggerComponent::ExistingTrigger(trigger_id) => {
-                if let Some(new_trigger) = traverse_trigger(*trigger_id, conn)? {
-                    let trigger_trigger = NewTriggerTrigger {
-                        triggered_id: trigger.id,
-                        triggering_id: new_trigger.id,
-                    };
-                    create_trigger_trigger(conn, &trigger_trigger)?;
-                    components.push(Component::Trigger(new_trigger));
-                } else {
-                    return Err(Box::new(DataEntryMissingError::with_message(format!(
-                        "Trigger with id {}",
-                        *trigger_id
-                    ))));
-                }
+                let new_trigger = traverse_trigger(*trigger_id, conn)?;
+                let trigger_trigger = NewTriggerTrigger {
+                    triggered_id: trigger.id,
+                    triggering_id: new_trigger.id,
+                };
+                create_trigger_trigger(conn, &trigger_trigger)?;
+                components.push(Component::Trigger(new_trigger));
             }
         }
     }

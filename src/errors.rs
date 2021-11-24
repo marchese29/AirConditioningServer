@@ -1,51 +1,45 @@
-use std::{error, fmt};
+use diesel::result::Error as DieselError;
+use rocket::{http::Status, response::Responder, serde::json::Json};
 
-use rocket::response::Responder;
+pub type ACResult<T> = std::result::Result<T, ACError>;
+pub type ACApiResult<T> = std::result::Result<Json<T>, ACError>;
 
-pub type ACResult<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
-
-// #[derive(Debug, Clone, Responder)]
-// #[response(status = 500, content_type = "plain")]
-// pub struct DatabaseAccessError {
-//     message: String,
-// }
-
-// impl DatabaseAccessError {
-//     pub fn with_message(message: &str) -> Self {
-//         Self {
-//             message: message.to_string(),
-//         }
-//     }
-// }
-
-// impl fmt::Display for DatabaseAccessError {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(
-//             f,
-//             "Encountered p roblem accessing the database: {}",
-//             &self.message
-//         )
-//     }
-// }
-
-// impl error::Error for DatabaseAccessError {}
-
-#[derive(Debug, Clone, Responder)]
-#[response(status = 404, content_type = "plain")]
-pub struct DataEntryMissingError {
-    message: String,
+#[derive(Debug)]
+pub enum ACError {
+    InternalServerError,
+    DatabaseAccessError(String),
+    DataEntryMissingError,
 }
 
-impl DataEntryMissingError {
-    pub fn with_message(message: String) -> Self {
-        Self { message }
+impl<'r> Responder<'r, 'static> for ACError {
+    fn respond_to(self, _request: &'r rocket::Request<'_>) -> rocket::response::Result<'static> {
+        match self {
+            ACError::InternalServerError => Err(Status::InternalServerError),
+            ACError::DatabaseAccessError(_) => Err(Status::InternalServerError),
+            ACError::DataEntryMissingError => Err(Status::NotFound),
+        }
     }
 }
 
-impl fmt::Display for DataEntryMissingError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Missing data entry: {}", &self.message)
+impl std::fmt::Display for ACError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ACError::InternalServerError => write!(f, "Internal Server Error"),
+            ACError::DatabaseAccessError(err) => write!(f, "Error accessing database: {}", err),
+            ACError::DataEntryMissingError => write!(f, "Data entry was missing"),
+        }
     }
 }
+impl std::error::Error for ACError {}
 
-impl error::Error for DataEntryMissingError {}
+impl From<DieselError> for ACError {
+    fn from(e: DieselError) -> Self {
+        match e {
+            DieselError::DatabaseError(_, info) => {
+                ACError::DatabaseAccessError(format!("{}", info.message()))
+            },
+            DieselError::NotFound => ACError::DataEntryMissingError,
+            _ => ACError::InternalServerError,
+        }
+    }
+}

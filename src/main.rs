@@ -5,7 +5,7 @@ extern crate diesel;
 
 use crate::database::ConditionDbConn;
 use crate::mounts::events::*;
-use crate::mounts::registry::*;
+use crate::mounts::relations::*;
 
 mod database;
 mod errors;
@@ -25,13 +25,13 @@ async fn main() {
         .mount("/", routes![index])
         .mount("/events", routes![set_condition, unset_condition])
         .mount(
-            "/registry",
+            "/relations",
             routes![
-                create_action,
+                create_trigger,
                 create_new_condition,
                 list_triggers,
                 list_conditions,
-                describe_action
+                describe_trigger
             ],
         )
         .launch()

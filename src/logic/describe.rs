@@ -18,12 +18,8 @@ use crate::{
 pub fn traverse_trigger(
     trigger_id: i32,
     conn: &SqliteConnection,
-) -> ACResult<Option<TriggerDescription>> {
-    if let Some(trigger) = get_trigger_for_id(conn, trigger_id)? {
-        Ok(Some(traverse_trigger_object(&trigger, conn)?))
-    } else {
-        Ok(None)
-    }
+) -> ACResult<TriggerDescription> {
+    Ok(traverse_trigger_object(&get_trigger_for_id(conn, trigger_id)?, conn)?)
 }
 
 pub fn traverse_trigger_object(

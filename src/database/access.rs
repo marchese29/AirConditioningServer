@@ -7,7 +7,7 @@ use super::models::*;
 
 no_arg_sql_function!(last_insert_id, sql_types::Integer);
 
-pub fn get_actions(conn: &SqliteConnection) -> ACResult<Vec<Trigger>> {
+pub fn get_triggers(conn: &SqliteConnection) -> ACResult<Vec<Trigger>> {
     use super::schema::triggers::dsl::*;
     Ok(triggers.order_by(id.asc()).load::<Trigger>(conn)?)
 }
@@ -20,20 +20,18 @@ pub fn get_conditions(conn: &SqliteConnection) -> ACResult<Vec<Condition>> {
 pub fn get_condition_for_id(
     conn: &SqliteConnection,
     condition_id: i32,
-) -> ACResult<Option<Condition>> {
+) -> ACResult<Condition> {
     use super::schema::conditions::dsl::*;
     Ok(conditions
         .find(condition_id)
-        .first::<Condition>(conn)
-        .optional()?)
+        .first::<Condition>(conn)?)
 }
 
-pub fn get_trigger_for_id(conn: &SqliteConnection, trigger_id: i32) -> ACResult<Option<Trigger>> {
+pub fn get_trigger_for_id(conn: &SqliteConnection, trigger_id: i32) -> ACResult<Trigger> {
     use super::schema::triggers::dsl::*;
     Ok(triggers
         .find(trigger_id)
-        .first::<Trigger>(conn)
-        .optional()?)
+        .first::<Trigger>(conn)?)
 }
 
 pub fn get_conditions_for_trigger(
