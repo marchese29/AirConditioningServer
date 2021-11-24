@@ -20,6 +20,12 @@ CREATE TABLE triggers (
     needs_all BOOLEAN NOT NULL
 );
 
+CREATE TABLE actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name VARCHAR NOT NULL,
+    description VARCHAR NOT NULL
+);
+
 CREATE TABLE trigger_conditions (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     triggered_id INTEGER NOT NULL,
@@ -34,4 +40,13 @@ CREATE TABLE trigger_triggers (
     triggering_id INTEGER NOT NULL,
     FOREIGN KEY(triggered_id) REFERENCES triggers(id),
     FOREIGN KEY(triggering_id) REFERENCES triggers(id)
+);
+
+CREATE TABLE trigger_actions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    trigger_id INTEGER NOT NULL,
+    action_id INTEGER NOT NULL,
+    is_engage_action BOOLEAN NOT NULL,
+    FOREIGN KEY(trigger_id) REFERENCES triggers(id),
+    FOREIGN KEY(action_id) REFERENCES actions(id)
 );
