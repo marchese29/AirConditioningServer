@@ -55,8 +55,3 @@ pub struct TriggerDescription {
     pub join_type: JoinType,
     pub is_on: bool,
 }
-
-#[derive(Serialize)]
-pub struct ActionInterfaceDescription {
-
-}

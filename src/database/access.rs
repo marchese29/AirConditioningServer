@@ -17,21 +17,14 @@ pub fn get_conditions(conn: &SqliteConnection) -> ACResult<Vec<Condition>> {
     Ok(conditions.order_by(id.asc()).load::<Condition>(conn)?)
 }
 
-pub fn get_condition_for_id(
-    conn: &SqliteConnection,
-    condition_id: i32,
-) -> ACResult<Condition> {
+pub fn get_condition_for_id(conn: &SqliteConnection, condition_id: i32) -> ACResult<Condition> {
     use super::schema::conditions::dsl::*;
-    Ok(conditions
-        .find(condition_id)
-        .first::<Condition>(conn)?)
+    Ok(conditions.find(condition_id).first::<Condition>(conn)?)
 }
 
 pub fn get_trigger_for_id(conn: &SqliteConnection, trigger_id: i32) -> ACResult<Trigger> {
     use super::schema::triggers::dsl::*;
-    Ok(triggers
-        .find(trigger_id)
-        .first::<Trigger>(conn)?)
+    Ok(triggers.find(trigger_id).first::<Trigger>(conn)?)
 }
 
 pub fn get_conditions_for_trigger(

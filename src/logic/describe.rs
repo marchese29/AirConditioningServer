@@ -2,9 +2,7 @@ use rocket_sync_db_pools::diesel::SqliteConnection;
 
 use crate::{
     database::{
-        access::{
-            get_conditions_for_trigger, get_trigger_for_id, get_triggering_triggers
-        },
+        access::{get_conditions_for_trigger, get_trigger_for_id, get_triggering_triggers},
         models::Trigger,
     },
     errors::ACResult,
@@ -14,11 +12,11 @@ use crate::{
     },
 };
 
-pub fn traverse_trigger(
-    trigger_id: i32,
-    conn: &SqliteConnection,
-) -> ACResult<TriggerDescription> {
-    Ok(traverse_trigger_object(&get_trigger_for_id(conn, trigger_id)?, conn)?)
+pub fn traverse_trigger(trigger_id: i32, conn: &SqliteConnection) -> ACResult<TriggerDescription> {
+    Ok(traverse_trigger_object(
+        &get_trigger_for_id(conn, trigger_id)?,
+        conn,
+    )?)
 }
 
 pub fn traverse_trigger_object(

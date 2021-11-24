@@ -4,8 +4,7 @@ use crate::{
     database::{
         access::{
             get_conditions_for_trigger, get_triggered_triggers, get_triggering_triggers,
-            get_triggers_for_condition, set_condition_off,
-            set_condition_on,
+            get_triggers_for_condition, set_condition_off, set_condition_on,
         },
         models::{Condition, Trigger},
     },

@@ -37,7 +37,7 @@ impl From<DieselError> for ACError {
         match e {
             DieselError::DatabaseError(_, info) => {
                 ACError::DatabaseAccessError(format!("{}", info.message()))
-            },
+            }
             DieselError::NotFound => ACError::DataEntryMissingError,
             _ => ACError::InternalServerError,
         }
